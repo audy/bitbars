@@ -2,6 +2,7 @@
 
 set -euo pipefail
 
+# token is only good for CI badge
 url="https://circleci.com/gh/pivotbio/lims.svg?style=svg&circle-token=e3b3456855e9cd933c1e25e9c211dd8b66f88c82"
 
 checksum=$(curl \
