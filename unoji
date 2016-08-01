@@ -1,0 +1,8 @@
+#!/usr/bin/env ruby
+
+require 'json'
+require 'net/http'
+
+unojis = JSON.parse(Net::HTTP.get(URI('http://beta.unoji.click/emojis.json')))
+
+puts unojis.sample["face"]
