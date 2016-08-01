@@ -1,0 +1,23 @@
+#!/bin/bash
+
+#
+# Display how many ec2 instances are currently running.
+#
+# Austin G. Davis-Richardson <harekrishna@gmail.com>
+#
+# Requirements:
+#
+# - aws-cli
+# - jq
+#
+
+instance_details=$(/usr/local/bin/aws ec2 describe-instances)
+
+running_count=$(echo ${instance_details} | /usr/local/bin/jq '[.Reservations[] | .Instances[] | select(.State.Name  == "running")]  | length')
+
+names=$(echo ${instance_details})
+
+
+if [ ! ${running_count} -eq 0 ]; then
+  echo "📡 ${running_count}"
+fi
