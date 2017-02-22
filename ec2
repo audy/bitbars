@@ -15,9 +15,12 @@ instance_details=$(/usr/local/bin/aws ec2 describe-instances)
 
 running_count=$(echo ${instance_details} | /usr/local/bin/jq '[.Reservations[] | .Instances[] | select(.State.Name  == "running")]  | length')
 
-names=$(echo ${instance_details})
-
+instances=$(echo ${instance_details} | /usr/local/bin/jq '.Reservations[].Instances[] | "" + .KeyName + ".[" + .InstanceType + "]"')
 
 if [ ! ${running_count} -eq 0 ]; then
   echo "📡 ${running_count}"
+  echo "---"
+  for instance in ${instances}; do
+    echo ${instance} | tr -d '"'
+  done
 fi
