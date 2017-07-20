@@ -11,16 +11,31 @@
 # - jq
 #
 
-instance_details=$(/usr/local/bin/aws ec2 describe-instances)
+set -euo pipefail
 
-running_count=$(echo ${instance_details} | /usr/local/bin/jq '[.Reservations[] | .Instances[] | select(.State.Name  == "running")]  | length')
 
-instances=$(echo ${instance_details} | /usr/local/bin/jq '.Reservations[].Instances[] | "" + .KeyName + ".[" + .InstanceType + "]"')
+total_instances=0
+out=''
 
-if [ ! ${running_count} -eq 0 ]; then
-  echo "📡 ${running_count}"
-  echo "---"
+function describe_instances() {
+
+  count=$(echo ${instance_details} | /usr/local/bin/jq '[.Reservations[] | .Instances[] | select(.State.Name  == "running")]  | length')
+
+  instances=$(echo ${instance_details} | /usr/local/bin/jq '.Reservations[].Instances[] | "" + .KeyName + ".[" + .InstanceType + "]"')
+
+  total_instances=$((total_instances+${count}))
+
   for instance in ${instances}; do
-    echo ${instance} | tr -d '"'
+    line=$(echo ${instance} | tr -d '"')
+    out="${out}\n${line}"
   done
-fi
+}
+
+for region in 'us-east-1' 'us-west-1'; do
+  instance_details=$(/usr/local/bin/aws ec2 describe-instances --region ${region}) describe_instances
+done
+
+echo "📡 ${total_instances}"
+echo '---'
+echo -e ${out}
+
