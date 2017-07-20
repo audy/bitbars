@@ -19,9 +19,10 @@ out=''
 
 function describe_instances() {
 
-  count=$(echo ${instance_details} | /usr/local/bin/jq '[.Reservations[] | .Instances[] | select(.State.Name  == "running")]  | length')
+  instance_details=$(/usr/local/bin/aws ec2 describe-instances --region ${region})
 
-  instances=$(echo ${instance_details} | /usr/local/bin/jq '.Reservations[].Instances[] | "" + .KeyName + ".[" + .InstanceType + "]"')
+  count=$(echo ${instance_details} | /usr/local/bin/jq '[.Reservations[] | .Instances[] | select(.State.Name  == "running")]  | length')
+  instances=$(echo ${instance_details} | /usr/local/bin/jq '.Reservations[].Instances[] |  "" + .KeyName + ".[" + .InstanceType +  "]" + "(" + .State.Name + ")"')
 
   total_instances=$((total_instances+${count}))
 
@@ -32,7 +33,7 @@ function describe_instances() {
 }
 
 for region in 'us-east-1' 'us-west-1'; do
-  instance_details=$(/usr/local/bin/aws ec2 describe-instances --region ${region}) describe_instances
+  describe_instances
 done
 
 echo "📡 ${total_instances}"
