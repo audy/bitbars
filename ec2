@@ -13,6 +13,7 @@
 
 set -euo pipefail
 
+. ~/.secrets
 
 total_instances=0
 out=''
