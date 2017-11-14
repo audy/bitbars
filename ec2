@@ -37,7 +37,6 @@ for region in 'us-east-1' 'us-west-1'; do
   describe_instances
 done
 
-echo "📡 ${total_instances}"
+echo "${total_instances} 📡"
 echo '---'
 echo -e ${out}
-
