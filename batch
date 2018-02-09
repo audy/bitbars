@@ -14,4 +14,6 @@ count=$(/usr/local/bin/aws \
   --job-queue ${QUEUE} \
   | /usr/local/bin/jq ".jobSummaryList | length")
 
-echo "${count} ⚙"
+if [ ${count} -gt 0 ]; then
+  echo "${count} ⚙"
+fi
