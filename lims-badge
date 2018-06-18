@@ -5,6 +5,8 @@ set -euo pipefail
 # token is only good for CI badge
 url="https://circleci.com/gh/pivotbio/lims.svg?style=svg&circle-token=e3b3456855e9cd933c1e25e9c211dd8b66f88c82"
 
+
+
 checksum=$(curl \
   --silent \
   --location \
@@ -12,7 +14,7 @@ checksum=$(curl \
   | md5)
 
 case ${checksum} in
-  c20090eb7d0fdaaf86420df402bcf48f)
+  1ff1263fbd275003c58cb41786c9731d)
     echo '☻'
     ;;
   *)
