@@ -22,8 +22,16 @@ function describe_instances() {
 
   instance_details=$(/usr/local/bin/aws ec2 describe-instances --region ${region})
 
-  count=$(echo ${instance_details} | /usr/local/bin/jq '[.Reservations[] | .Instances[] | select(.State.Name  == "running")]  | length')
-  instances=$(echo ${instance_details} | /usr/local/bin/jq '.Reservations[].Instances[] |  "" + .KeyName + ".[" + .InstanceType +  "]" + "(" + .State.Name + ")"')
+  count=$(
+    echo ${instance_details} \
+      | /usr/local/bin/jq '[.Reservations[] | .Instances[] | select(.State.Name  == "running")]  | length'
+  )
+
+  instances=$(
+    echo ${instance_details} \
+      | /usr/local/bin/jq '.Reservations[].Instances[] |  "" + .KeyName + ".[" + .InstanceType +  "]" + "(" + .State.Name + ")"' \
+      | grep running
+  )
 
   total_instances=$((total_instances+${count}))
 
